@@ -1,0 +1,23 @@
+global:
+  smtp_smarthost: 'smtp.qq.com:465'
+  smtp_from: '1126834403@qq.com'
+  smtp_auth_username: '1126834403@qq.com'
+  # qq邮箱获取的授权码
+  smtp_auth_password: 'xxxxxxxxxxxxxxxxx'
+  smtp_require_tls: false
+
+#templates:
+#  - '/alertmanager/template/*.tmpl'
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 5m
+  receiver: 'default-receiver'
+
+receivers:
+  - name: 'default-receiver'
+    email_configs:
+      - to: '2119713895@qq.com'
+        send_resolved: true
