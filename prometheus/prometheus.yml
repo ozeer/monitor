@@ -9,7 +9,7 @@ alerting:
   alertmanagers:
   - static_configs:
     - targets:
-      # - alertmanager:9093
+      - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
@@ -24,6 +24,12 @@ scrape_configs:
 
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
-
     static_configs:
     - targets: ['localhost:9090']
+
+  - job_name: "go_demo"
+    scrape_interval: 1s
+    static_configs:
+    - targets: ["192.168.1.4:2112"]
+      labels:
+        server_name: outpost

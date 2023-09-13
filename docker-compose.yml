@@ -8,21 +8,27 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
-    # volumes:
-    #   - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
     networks:
       - backend
-    restart: on-failure
+    restart: always
     # command: --web.enable-lifecycle
   grafana:
     image: grafana/grafana
     container_name: grafana
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+    environment:
+      - HTTP_USER="{{GRAFANA_USER}}"
+      - HTTP_PASS="{{GRAFANA_PASSWD}}"
     ports:
       - 3000:3000
     networks:
       - backend
+    restart: always
   node_exporter:
     image: prom/node-exporter
     container_name: node_exporter
@@ -41,27 +47,6 @@ services:
     networks:
       - backend
     restart: on-failure
-  mysql_exporter:
-    image: prom/mysqld-exporter
-    container_name: mysql_exporter
-    environment:
-      - DATA_SOURCE_NAME=root:123456@(127.0.0.1:3306)/
-    ports:
-      - 9102:9104
-    networks:
-      - backend
-  cadvisor:
-    image: google/cadvisor
-    container_name: cadvisor
-    volumes:
-      - ./cadvisor/:/rootfs:ro
-      - ./cadvisor/run:/var/run:rw
-      - ./cadvisor/sys:/sys:ro
-      - ./cadvisor/docker/:/var/lib/docker:ro
-    ports:
-      - 9103:8080
-    networks:
-      - backend
   alertmanager:
     image: prom/alertmanager
     container_name: alertmanager
